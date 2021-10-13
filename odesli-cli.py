@@ -1,7 +1,19 @@
 import argparse
 
-from odesli import Odesli
-from odesli import Song
+from odesli.Odesli import Odesli
+from odesli.song.Song import Song
+
+INDENTATION_WIDTH = 4
+PROPERTIES = ['all', 'artistName', 'id', 'link', 'thumbnailUrl', 'thumbnailWidth', 'thumbnailHeight', 'title', 'type']
+
+def indentString(level, s):
+    return ' '*INDENTATION_WIDTH*level+s
+
+def getType(entity):
+    if isinstance(entity, Song):
+        return 'song'
+    # elif isinstance(entity, Album.Album):
+        # return 'album'
 
 parser = argparse.ArgumentParser(description='TODO.')
 parser.add_argument('url', metavar='url', type=str,
@@ -9,8 +21,8 @@ parser.add_argument('url', metavar='url', type=str,
 parser.add_argument('--provider', metavar='provider', type=str,
                     help='the api provider to use data of (default: provider used for the query)')
 parser.add_argument('property', metavar='property', type=str,
-                    choices=['artistName', 'id', 'link', 'thumbnailUrl', 'thumbnailWidth', 'thumbnailHeight', 'title', 'type'],
-                    help='property')
+                    choices=PROPERTIES,
+                    help='The property to output. Must be one of: '+', '.join(PROPERTIES))
 parser.add_argument('--platform', metavar='platform', type=str,
                     help='platform to print the link of (default: first link in list)')
 args = parser.parse_args()
@@ -32,9 +44,19 @@ if args.property == 'link':
     else:
         print(entity.linksByPlatform[args.platform])
 elif args.property == 'type':
-    if isinstance(entity, Song.Song):
-        print('song');
-    # elif isinstance(entity, Album.Album):
-    #     print('album')
+    print(getType(entity))
+elif args.property == 'all':
+    formatString = "{:<20}"*2
+    print(formatString.format('id:', entity.id))
+    print(formatString.format('type:', getType(entity)))
+    print(formatString.format('title:', entity.title))
+    print(formatString.format('artistName:', entity.artistName))
+    print(formatString.format('thumbnailUrl:', entity.thumbnailUrl))
+    print(formatString.format('thumbnailWidth:', entity.thumbnailWidth))
+    print(formatString.format('thumbnailHeight:', entity.thumbnailHeight))
+    print(formatString.format('provider:', entity.provider))
+    print('links:')
+    for platform in entity.linksByPlatform:
+        print(formatString.format(indentString(1, platform)+':', entity.linksByPlatform[platform]))
 else:
     print(getattr(entity, args.property))
