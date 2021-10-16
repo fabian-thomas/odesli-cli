@@ -1,19 +1,14 @@
 import argparse
 
 from odesli.Odesli import Odesli
-from odesli.song.Song import Song
+from odesli.entity.song.SongResult import SongResult
+from odesli.entity.album.AlbumResult import AlbumResult
 
 INDENTATION_WIDTH = 4
 PROPERTIES = ['all', 'artistName', 'id', 'link', 'thumbnailUrl', 'thumbnailWidth', 'thumbnailHeight', 'title', 'type']
 
 def indentString(level, s):
     return ' '*INDENTATION_WIDTH*level+s
-
-def getType(entity):
-    if isinstance(entity, Song):
-        return 'song'
-    # elif isinstance(entity, Album.Album):
-        # return 'album'
 
 def main():
     parser = argparse.ArgumentParser(description='TODO.')
@@ -32,10 +27,19 @@ def main():
     entity = odesli.getByUrl(args.url)
 
     # use specified api provider for printing the data
-    if args.provider == None:
-        entity = entity.song
+    if isinstance(entity, SongResult):
+        if args.provider == None:
+            entity = entity.song
+        else:
+            entity = entity.songsByProvider[args.provider]
+    elif isinstance(entity, AlbumResult):
+        if args.provider == None:
+            entity = entity.album
+        else:
+            entity = entity.albumsByProvider[args.provider]
     else:
-        entity = entity.songsByProvider[args.provider]
+        raise NotImplementedError()
+
 
     # print out requested properties
     if args.property == 'link':
@@ -45,11 +49,11 @@ def main():
         else:
             print(entity.linksByPlatform[args.platform])
     elif args.property == 'type':
-        print(getType(entity))
+        print(entity.getType())
     elif args.property == 'all':
         formatString = "{:<20}"*2
         print(formatString.format('id:', entity.id))
-        print(formatString.format('type:', getType(entity)))
+        print(formatString.format('type:', entity.getType()))
         print(formatString.format('title:', entity.title))
         print(formatString.format('artistName:', entity.artistName))
         print(formatString.format('thumbnailUrl:', entity.thumbnailUrl))
