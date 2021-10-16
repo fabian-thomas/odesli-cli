@@ -11,14 +11,14 @@ def indentString(level, s):
     return ' '*INDENTATION_WIDTH*level+s
 
 def main():
-    parser = argparse.ArgumentParser(description='TODO.')
+    parser = argparse.ArgumentParser()
     parser.add_argument('url', metavar='url', type=str,
-                        help='an url to some music content (e.g. song or album)')
+                        help='an url to some music content')
     parser.add_argument('--provider', metavar='provider', type=str,
                         help='the api provider to use data of (default: provider used for the query)')
     parser.add_argument('property', metavar='property', type=str,
                         choices=PROPERTIES,
-                        help='The property to output. Must be one of: '+', '.join(PROPERTIES))
+                        help='the property to output. Must be one of: '+', '.join(PROPERTIES))
     parser.add_argument('--platform', metavar='platform', type=str,
                         help='platform to print the link of (default: first link in list)')
     args = parser.parse_args()
