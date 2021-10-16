@@ -27,13 +27,13 @@ pip install dist/*.whl
 odesli-cli '{URL}' all
 ```
 
-### Convert current Spotify track to Tidal link and copy it to the X clipboard
+### Convert current Spotify track to Tidal link and copy it to the X clipboard (Linux only)
 ```bash
 current_spotify="$(qdbus org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Metadata | grep xesam:url |  awk '{print $2}')"
 odesli-cli "$current_spotify" --provider tidal link | xclip -selection clipboard
 ```
 
-### Open Tidal, Spotify, Deezer, etc. links directly in the Spotify app (the coolest one)
+### Open Tidal, Spotify, Deezer, etc. links directly in the Spotify app (The coolest one, Linux only)
 For this functionality one needs to hack a bit more. I have it all set up with my Linux dofiles, so trust me, it works.
 Just some key points to make it work:
 - Create a shell script that can handle all sorts of http(s) links and set it as the mime default.
