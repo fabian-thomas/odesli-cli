@@ -2,6 +2,8 @@
 
 CLI client for the Odesli/Songlink API.
 
+This project uses [python-odesli](https://github.com/fabian-thomas/python-odesli) for the API calls.
+
 ## Installation
 
 ```bash
